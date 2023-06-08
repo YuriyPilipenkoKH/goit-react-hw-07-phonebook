@@ -1,15 +1,17 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
-import { deleteContact, editContact} from 'redux/contactsSlice';
+import {  editContact} from 'redux/contactsSlice';
 import { BtnDelete, BtnEdit, BtnWrapper, EditWrapper, ItemCard, ListItem } from 'components/ContactList/ContactList.styled';
 import { useState } from 'react';
 import { confirmDelete, confirmUpdate } from 'utils/notifier';
 import { useSelector } from 'react-redux';
 import Notiflix from 'notiflix';
+import { deleteContact } from 'redux/operations';
 
 
 
 export default function ContactListItem({ contact }) {
+ 
   const { id, name, number } = contact;
 
   const [isEdit, setIsEdit] = useState(false)
@@ -20,7 +22,7 @@ export default function ContactListItem({ contact }) {
   const dispatch = useDispatch();
 
   const contactsList  = useSelector(state => state.contacts.contactsList )
- console.log(contactsList);
+
 
   const handleEdit = () => {
     setIsEdit(prev => !prev )
@@ -29,7 +31,7 @@ export default function ContactListItem({ contact }) {
       const updatedContact = {
         id,
         name: nick,
-        number: phone,
+        number: number,
       };
 
 console.log('updatedContact' , updatedContact );
@@ -104,7 +106,7 @@ confirmUpdate(`Are you sure you want to update ${name}?`, name)
         </EditWrapper>
       ) : (
         <ItemCard className="cardSpan">
-          {contact.name}: {contact.phone}
+          {contact.name}: {contact.number}
         </ItemCard>
       )}
 

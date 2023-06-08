@@ -6,29 +6,30 @@ import { useEffect } from 'react';
 
 
 export const ContactList = () => {
+
   const dispatch = useDispatch()
 
   useEffect(() => {
     console.log('ContactList-dispatch');
 
     dispatch(fetchContacts())
-    .then(data => {
-      console.log(data.payload)
-      const list = data.payload
-      return list
-    })
+    // .then(data => {
+    //   console.log(data.payload)
+    //   const list = data.payload
+    //   return list
+    // })
 
  
-  }, [dispatch])
+  }, [dispatch] )
 
   // fetchContacts()
 
   const contacts = useSelector(state => state.contacts.contactsList)
   const filterValue = useSelector(state => state.filter)
+  // console.log(filterValue);
 
   const filteredContacts = [...contacts.filter((contact )=>
-     contact.name.toLowerCase().includes(filterValue.filter) ||
-     contact.number.toString().includes(filterValue.filter))]
+     contact.name.toLowerCase().includes(filterValue.filter) || contact.number.includes(filterValue.filter) )]
 
 
 

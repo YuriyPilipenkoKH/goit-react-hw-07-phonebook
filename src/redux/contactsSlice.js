@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import Notiflix from "notiflix";
 // import { persistReducer } from 'redux-persist';
 
-import { fetchContacts , addContactByPost} from "./operations";
+import { fetchContacts , addContact, deleteContact} from "./operations";
 
 
 
@@ -31,12 +31,12 @@ export const contactsSlice =  createSlice({
         //   },
         // },
 
-       deleteContact: {
+      //  deleteContact: {
 
-        reducer(state, action) {
-          state.contactsList = state.contactsList.filter(contact => contact.id !== action.payload);
-        }
-       },
+      //   reducer(state, action) {
+      //     state.contactsList = state.contactsList.filter(contact => contact.id !== action.payload);
+      //   }
+      //  },
 
        editContact:{
 
@@ -68,15 +68,29 @@ export const contactsSlice =  createSlice({
         state.error = action.payload;
       },
 
-      [addContactByPost.pending](state) {
+      [addContact.pending](state) {
         state.isLoading = true;
       },
-      [addContactByPost.fulfilled](state, action) {
+      [addContact.fulfilled](state, action) {
         state.isLoading = false;
         state.error = null;
         state.contactsList.push(action.payload)
       },
-      [addContactByPost.rejected](state, action) {
+      [addContact.rejected](state, action) {
+        state.isLoading = false;
+        state.error = action.payload;
+      },
+
+      [deleteContact.pending](state) {
+        state.isLoading = true;
+      },
+      [deleteContact.fulfilled](state, action) {
+        state.isLoading = false;
+        state.error = null;
+        state.contactsList = state.contactsList.filter(contact => contact.id !== action.payload.id);
+
+      },
+      [deleteContact.rejected](state, action) {
         state.isLoading = false;
         state.error = action.payload;
       },
@@ -88,7 +102,7 @@ export const contactsSlice =  createSlice({
 //   storage,
 // };
 
-export const {addContact, deleteContact, editContact}  = contactsSlice.actions
+export const { editContact}  = contactsSlice.actions
 
 export const contactsReducer = contactsSlice.reducer
 
