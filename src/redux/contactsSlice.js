@@ -2,7 +2,8 @@ import { createSlice } from "@reduxjs/toolkit";
 import Notiflix from "notiflix";
 // import { persistReducer } from 'redux-persist';
 
-import { fetchContacts } from "./operations";
+import { fetchContacts , addContactByPost} from "./operations";
+
 
 
 // const DEFAULT_CONTACTS = [
@@ -23,12 +24,12 @@ export const contactsSlice =  createSlice({
     initialState,
 
     reducers: {
-        addContact: {
+        // addContact: {
  
-          reducer(state, action) {
-         state.contactsList.push(action.payload);
-          },
-        },
+        //   reducer(state, action) {
+        //  state.contactsList.push(action.payload);
+        //   },
+        // },
 
        deleteContact: {
 
@@ -60,9 +61,22 @@ export const contactsSlice =  createSlice({
       [fetchContacts.fulfilled](state, action) {
         state.isLoading = false;
         state.error = null;
-        state.items = action.payload;
+        state.contactsList= action.payload;
       },
       [fetchContacts.rejected](state, action) {
+        state.isLoading = false;
+        state.error = action.payload;
+      },
+
+      [addContactByPost.pending](state) {
+        state.isLoading = true;
+      },
+      [addContactByPost.fulfilled](state, action) {
+        state.isLoading = false;
+        state.error = null;
+        state.contactsList.push(action.payload)
+      },
+      [addContactByPost.rejected](state, action) {
         state.isLoading = false;
         state.error = action.payload;
       },

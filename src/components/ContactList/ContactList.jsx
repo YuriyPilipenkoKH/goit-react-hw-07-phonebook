@@ -9,11 +9,19 @@ export const ContactList = () => {
   const dispatch = useDispatch()
 
   useEffect(() => {
+    console.log('ContactList-dispatch');
+
     dispatch(fetchContacts())
+    .then(data => {
+      console.log(data.payload)
+      const list = data.payload
+      return list
+    })
+
  
   }, [dispatch])
-  
-  fetchContacts()
+
+  // fetchContacts()
 
   const contacts = useSelector(state => state.contacts.contactsList)
   const filterValue = useSelector(state => state.filter)

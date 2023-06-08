@@ -104,7 +104,7 @@ confirmUpdate(`Are you sure you want to update ${name}?`, name)
         </EditWrapper>
       ) : (
         <ItemCard className="cardSpan">
-          {contact.name}: {contact.number}
+          {contact.name}: {contact.phone}
         </ItemCard>
       )}
 
