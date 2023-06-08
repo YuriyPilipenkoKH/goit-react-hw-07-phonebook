@@ -1,37 +1,16 @@
 import { List,  ContactContainer } from './ContactList.styled';
 import ContactListItem from 'components/ContactListItem/ContactListItem';
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchContacts } from 'redux/operations';
-import { useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import { getContactsList , getContactsFilter} from 'redux/selectors';
 
 
 export const ContactList = () => {
 
-  const dispatch = useDispatch()
-
-  useEffect(() => {
-    console.log('ContactList-dispatch');
-
-    dispatch(fetchContacts())
-    // .then(data => {
-    //   console.log(data.payload)
-    //   const list = data.payload
-    //   return list
-    // })
-
- 
-  }, [dispatch] )
-
-  // fetchContacts()
-
-  const contacts = useSelector(state => state.contacts.contactsList)
-  const filterValue = useSelector(state => state.filter)
-  // console.log(filterValue);
+  const contacts = useSelector(getContactsList)
+  const filterValue = useSelector(getContactsFilter)
 
   const filteredContacts = [...contacts.filter((contact )=>
      contact.name.toLowerCase().includes(filterValue.filter) || contact.number.includes(filterValue.filter) )]
-
-
 
 
   return (
@@ -39,8 +18,7 @@ export const ContactList = () => {
       <ContactContainer>
         <List>
           {filteredContacts.map((contact) => {
-           
-
+          
             return (
             <ContactListItem 
             key={contact.id}

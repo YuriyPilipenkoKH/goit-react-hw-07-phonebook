@@ -9,7 +9,6 @@ axios.defaults.baseURL = "https://6482161f29fa1c5c50329215.mockapi.io";
     async (_, thunkAPI) => {
       try {
         const response = await axios.get("/contacts");
-        console.log(response);
         return response.data;
 
       } catch (e) {
@@ -25,8 +24,6 @@ axios.defaults.baseURL = "https://6482161f29fa1c5c50329215.mockapi.io";
       const {name, number} = contact
       try {
         const response = await axios.post("/contacts", {name, number});
-        console.log(response);
-        
         return response.data;
 
       } catch (e) {
@@ -39,11 +36,28 @@ axios.defaults.baseURL = "https://6482161f29fa1c5c50329215.mockapi.io";
     "contacts/deleteContact",
   
     async (id, thunkAPI) => {
-   console.log('id', id);
       try {
-        const response = await axios.delete(`/contacts/${id}`);
-        console.log(response);
-        
+        const response = await axios.delete(`/contacts/${id}`);  
+        return response.data;
+
+      } catch (e) {
+        return thunkAPI.rejectWithValue(e.message);
+      }
+    }
+  );
+
+ export const editContact = createAsyncThunk(
+    "contacts/editContact",
+  
+    async (contact, thunkAPI) => {
+
+   const {id, name, number} = contact
+   try {
+    const response = await axios.put(`/contacts/${id}`, {
+      name: name,
+      number: number,
+    });
+      
         return response.data;
 
       } catch (e) {
