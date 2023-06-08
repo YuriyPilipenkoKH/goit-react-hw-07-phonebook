@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import Notiflix from "notiflix";
 // import { persistReducer } from 'redux-persist';
-import storage from 'redux-persist/lib/storage';
+
 import { fetchContacts } from "./operations";
 
 
