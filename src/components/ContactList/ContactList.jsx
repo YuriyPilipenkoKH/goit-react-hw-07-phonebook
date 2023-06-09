@@ -1,4 +1,4 @@
-import { List,  ContactContainer } from './ContactList.styled';
+import { List,  ContactContainer, EmptySpan } from './ContactList.styled';
 import ContactListItem from 'components/ContactListItem/ContactListItem';
 import { useSelector } from 'react-redux';
 import { getContactsList , getContactsFilter} from 'redux/selectors';
@@ -14,7 +14,8 @@ export const ContactList = () => {
 
 
   return (
-    contacts.length !== 0 && (
+    filteredContacts.length !== 0 
+    ?(
       <ContactContainer>
         <List>
           {filteredContacts.map((contact) => {
@@ -30,6 +31,10 @@ export const ContactList = () => {
         </List>
       </ContactContainer>
     )
+    :<ContactContainer>
+      <EmptySpan>No match to this query
+        </EmptySpan>
+    </ContactContainer>
   );
 };
 
