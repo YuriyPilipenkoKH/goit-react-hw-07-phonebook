@@ -1,7 +1,9 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, isAnyOf } from "@reduxjs/toolkit";
 import Notiflix from "notiflix";
 import { fetchContacts , addContact, deleteContact, editContact } from "./operations";
 
+const arrayOfThunks  = [fetchContacts , addContact, deleteContact, editContact]
+const fn = (type) => arrayOfThunks.map((el) => el[type])
 
 const initialState = { 
   contactsList: [],
@@ -9,72 +11,67 @@ const initialState = {
   error: null,
 };
 
+const handleFulfilled = (state) => {
+  state.isLoading = false;
+  state.error = null;
+}
+
+const handlePending = (state) => {
+  state.isLoading = true;
+}
+
+const handleRejected = (state, action) => {
+  state.isLoading = false;
+  state.error = action.payload;
+}
+
 export const contactsSlice =  createSlice({
     name: 'contacts',
     initialState,
 
-   
-    extraReducers: {
-      [fetchContacts.pending](state) {
-        state.isLoading = true;
-      },
-      [fetchContacts.fulfilled](state, action) {
-        state.isLoading = false;
-        state.error = null;
-        state.contactsList= action.payload;
-      },
-      [fetchContacts.rejected](state, action) {
-        state.isLoading = false;
-        state.error = action.payload;
-      },
-      //ADD
-      [addContact.pending](state) {
-        state.isLoading = true;
-      },
-      [addContact.fulfilled](state, action) {
-        state.isLoading = false;
-        state.error = null;
-        state.contactsList.push(action.payload)
-      },
-      [addContact.rejected](state, action) {
-        state.isLoading = false;
-        state.error = action.payload;
-      },
-      //DELETE
-      [deleteContact.pending](state) {
-        state.isLoading = true;
-      },
-      [deleteContact.fulfilled](state, action) {
-        state.isLoading = false;
-        state.error = null;
-        state.contactsList = state.contactsList.filter(contact => contact.id !== action.payload.id);
+    extraReducers: (builder) => {
+      builder
 
-      },
-      [deleteContact.rejected](state, action) {
-        state.isLoading = false;
-        state.error = action.payload;
-      },
-      //EDIT
-      [editContact.pending](state) {
-        state.isLoading = true;
-      },
-      [editContact.fulfilled](state, action) {
-        state.isLoading = false;
-        state.error = null;
+        .addCase(fetchContacts.fulfilled, (state, action) => {
+           state.contactsList= action.payload;
+        })
 
-          const { id} = action.payload;  
-          const contactToUpdate  = state.contactsList.find(contact => contact.id === action.payload.id)
-          const allExeptUpdated = state.contactsList.filter(contact => contact.id !== id);
+        .addCase(addContact.fulfilled, (state, action) => {
+           state.contactsList.push(action.payload)
+        })
 
-          state.contactsList = [...allExeptUpdated, action.payload]
+        .addCase(deleteContact.fulfilled, (state, action) => {
+           state.contactsList = state.contactsList.filter(contact => contact.id !== action.payload.id);
+        })
 
-          Notiflix.Notify.success(`Contact ${contactToUpdate.name} was updated.`);
-      },
-      [editContact.rejected](state, action) {
-        state.isLoading = false;
-        state.error = action.payload;
-      },
-    },
+        .addCase(editContact.fulfilled, (state, action) => {
+
+          const contactToUpdate  = state.contactsList.find(
+            contact => contact.id === action.payload.id
+          )
+          const index = state.contactsList.findIndex(
+            contact => contact.id === action.payload.id
+          );
+
+            state.contactsList.splice(index, 1, action.payload);
+            Notiflix.Notify.success(`Contact ${contactToUpdate.name} was updated.`);
+        })
+
+        .addMatcher(isAnyOf(...fn('pending') ), handlePending )
+        .addMatcher(isAnyOf(...fn('fulfilled') ),  handleFulfilled)    
+        .addMatcher(isAnyOf(...fn('rejected') ),handleRejected )
+
+        // .addMatcher(isAnyOf(
+        //   fetchContacts.rejected,
+        //   addContact.rejected,
+        //   deleteContact.rejected,
+        //   editContact.rejected,
+        //    ),
+        //     handleRejected
+        //    )
+
+    }
+
 })
 
 
