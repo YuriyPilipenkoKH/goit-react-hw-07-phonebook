@@ -1,6 +1,5 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
-
 import { BtnDelete, BtnEdit, BtnWrapper, EditWrapper, ItemCard, ListItem } from 'components/ContactList/ContactList.styled';
 import { useState } from 'react';
 import { confirmDelete, confirmUpdate } from 'utils/notifier';
@@ -9,19 +8,17 @@ import Notiflix from 'notiflix';
 import { deleteContact } from 'redux/operations';
 import { getContactsList } from 'redux/selectors';
 import { editContact } from 'redux/operations';
-
+import { IDspan } from './ContactListItem.styled';
 
 
 export default function ContactListItem({ contact }) {
- 
-  const { id, name, number } = contact;
+  const dispatch = useDispatch();
+  const contactsList  = useSelector(getContactsList )
+  const { id, name, number} = contact;
 
   const [isEdit, setIsEdit] = useState(false)
   const [nick, setNick] = useState(name)
   const [phone, setPhone] = useState(number)
-
-  const dispatch = useDispatch();
-  const contactsList  = useSelector(getContactsList )
 
 
   const handleEdit = () => {
@@ -34,26 +31,36 @@ export default function ContactListItem({ contact }) {
         number: phone,
       };
 
+    
+
 console.log('updatedContact' , updatedContact );
 const contactToUpdate  = contactsList.find(contact => contact.id === updatedContact.id)
-// console.log('contactToUpdate',contactToUpdate)
+console.log('contactToUpdate',contactToUpdate)
 
 const allExeptUpdated = contactsList.filter(contact => contact.id !== contactToUpdate.id)
 // console.log('allExeptUpdated',allExeptUpdated)
 
+const returnDefault =() =>{
+  setNick(contactToUpdate.name)
+  setPhone(contactToUpdate.number)
+}  
+
 if(updatedContact.name === '' || updatedContact.number === ''){
   Notiflix.Notify.failure('No Empty Strings, dude!');
+  returnDefault()
   return;
 }
 
 if (allExeptUpdated.find((contact) => contact.name.toLowerCase() === updatedContact.name.toLowerCase())){
   Notiflix.Notify.failure(`${updatedContact.name} is already in contacts.`);
-return ;
+  returnDefault()
+  return ;
 }
 
 else if (allExeptUpdated.find((contact) => contact.number === updatedContact.number)) {
   Notiflix.Notify.failure(`${updatedContact.number} is already in contacts.`);
-return ;
+  returnDefault() 
+  return ;
 }
 
 
@@ -104,12 +111,14 @@ confirmUpdate(`Are you sure you want to update ${name}?`, name)
 
   return (
     <ListItem totalItems={4}>
+      <IDspan>{id}</IDspan>
       {isEdit ? (
         <EditWrapper className="edit-wrapper">
           <input type="text" name="nick" value={nick} onChange={handleChange} />
           <input type="text" name="phone" value={phone} onChange={handleChange} />
         </EditWrapper>
       ) : (
+        
         <ItemCard className="cardSpan">
           {contact.name}: {contact.number}
         </ItemCard>
