@@ -193,4 +193,23 @@ export const EmptySpan = styled.span`
   font-size: 24px;
   font-weight: 600;
   color: #333;
+
+
+`
+
+export const Count  = styled.span`
+position: absolute;
+top: 473px;
+right: 30%;
+width: 46px;
+display: flex;
+align-items: center;
+justify-content: center;
+
+background-color: var(--orange);
+padding: 12px;
+border-radius: 50%;
+color: #555;
+font-weight: 800;
+letter-spacing: 1px;
 `
