@@ -19,6 +19,7 @@ transition: 0.2s ease;
 
 &:active,
 &:focus {
+    outline: 1px solid var(--orange);
     background-color: var(--blue);
     box-shadow: var(--shadow-four);
 }

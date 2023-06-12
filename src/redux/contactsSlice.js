@@ -5,6 +5,8 @@ import { fetchContacts , addContact, deleteContact, editContact } from "./operat
 const arrayOfThunks  = [fetchContacts , addContact, deleteContact, editContact]
 const fn = (type) => arrayOfThunks.map((el) => el[type])
 
+// console.log(fn('rejected'));
+
 const initialState = { 
   contactsList: [],
   isLoading: false,

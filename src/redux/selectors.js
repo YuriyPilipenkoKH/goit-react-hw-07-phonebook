@@ -10,7 +10,7 @@ export const getSorted =  state => state.sort
 export const getSortedById = (contactsList, bool)  => { 
     return bool 
     ? [...contactsList].sort((a, b) => parseInt(a.id) - parseInt(b.id))
-    : [...contactsList].sort((b, a) => parseInt(a.id) - parseInt(b.id)) 
+    : [...contactsList].sort((b, a) => Number(a.id) - Number(b.id)) 
   } 
 
 export const getSortedByDate = (contactsList, bool)  => {
